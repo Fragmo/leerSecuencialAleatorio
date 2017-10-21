@@ -15,9 +15,11 @@ import java.io.FileReader;
 import java.io.FileWriter;
 import java.io.IOException;
 import java.io.RandomAccessFile;
+import java.util.Arrays;
 import java.util.logging.Level;
 import java.util.logging.Logger;
 import javax.swing.JOptionPane;
+import javax.swing.JTextArea;
 import javax.swing.text.BadLocationException;
 import javax.swing.text.DefaultHighlighter;
 import javax.swing.text.Highlighter;
@@ -35,15 +37,17 @@ public class ventanaFichero extends javax.swing.JFrame {
     String direccion = "";
     Boolean ayuda = false;
     int codigoMenu = 0; 
+    Registro miRegistro = new Registro();
     public ventanaFichero() {
         initComponents();
         dialogSelecionaFicheroParaHistorial.setSize(400,400);
         dialogLeerOEscribirArchivos.setSize(400,400);
-//        dialogSelecionaFicheroParaHistorial.setModal(true);
-//        dialogSelecionaFicheroParaHistorial.setVisible(true);
         dialogLeerOEscribirArchivos.setModal(true);
         dialogLeerOEscribirArchivos.setVisible(true);
         
+    }
+    public JTextArea metodoParaTextoArriba (){
+      return textoArriba;  
     }
     
         public String leeArchivoSecuencial( String archivo){
@@ -55,7 +59,7 @@ public class ventanaFichero extends javax.swing.JFrame {
          BufferedReader br = new BufferedReader (fr);
          
          while((copiaLinea = br.readLine()) != null){
-             textoTotal = textoTotal + copiaLinea+ "/n";
+             textoTotal = textoTotal + copiaLinea /*+ "/n" */;
          }
          
          br.close();
@@ -415,7 +419,11 @@ public class ventanaFichero extends javax.swing.JFrame {
        // este switch espara configurar las opciones de abajo conforme el boton que hayamos pulsado
        switch(codigoMenu){
            case 1: textoArriba.setText(leeArchivoSecuencial(direccion));break;
-           //case 2: {try{textoArriba.setText(leeArchivoAleatorio(direccion));}catch(IOException ex){}}break;  
+           case 2: try{miRegistro.leerRegistros(direccion, this);}catch(IOException ex){};break;
+               
+               /*{try{for(int i = 0; i<miregistro.leerRegistros(direccion).length; i++){
+                   textoArriba.setText(textoArriba.getText() +miregistro.leerRegistros(direccion)[i] );
+                    }}catch(IOException ex) {}}break; */   
            case 4 : try{
                         // aqui se realiza la copia de un archivo a otro y se muestra por pantalla
                         FileWriter puenteEscribir = new FileWriter(nombreDireccionCarpeta.getText(), true);
@@ -476,11 +484,13 @@ public class ventanaFichero extends javax.swing.JFrame {
 
     private void archivoAleatorioMousePressed(java.awt.event.MouseEvent evt) {//GEN-FIRST:event_archivoAleatorioMousePressed
         codigoMenu = 2;
+        nombreCarpeta.setText("Aleatorio.txt");
         menuSecuencial.setVisible(false);
         menuCarpeta.setVisible(false);
         dialogLeerOEscribirArchivos.setVisible(false);
         dialogSelecionaFicheroParaHistorial.setModal(true);
         dialogSelecionaFicheroParaHistorial.setVisible(true);
+        
         
         
     }//GEN-LAST:event_archivoAleatorioMousePressed
@@ -635,6 +645,7 @@ public class ventanaFichero extends javax.swing.JFrame {
     }//GEN-LAST:event_textoBuscaPalabraKeyPressed
 
     private void textoBuscaPalabraMousePressed(java.awt.event.MouseEvent evt) {//GEN-FIRST:event_textoBuscaPalabraMousePressed
+        if(textoBuscaPalabra.getText().equals("Inserte Palabra  a buscar"))
         textoBuscaPalabra.setText("");
     }//GEN-LAST:event_textoBuscaPalabraMousePressed
 
@@ -672,6 +683,8 @@ public class ventanaFichero extends javax.swing.JFrame {
             }
         });
     }
+    
+
 
     // Variables declaration - do not modify//GEN-BEGIN:variables
     private javax.swing.JButton archivoAleatorio;
